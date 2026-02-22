@@ -160,7 +160,7 @@ async def process_user_confirm(callback: CallbackQuery):
     headers = {"X-Bot-Secret": BOT_SECRET_KEY}
 
     # Сразу отвечаем, чтобы убрать спиннер, но даем понять, что процесс идет
-    await callback.answer("⏳ Обработка...")
+    await callback.answer("⏳ Заявка в работе...")
     
     try:
         async with aiohttp.ClientSession(timeout=aiohttp.ClientTimeout(total=10)) as session:
@@ -173,7 +173,7 @@ async def process_user_confirm(callback: CallbackQuery):
                         reply_params = {"reply_to_message_id": order_data["user_message_id"]}
                     
                     await callback.message.reply(
-                        f"🏆 <b>Заявка #{order_id} полностью подтверждена!</b>",
+                        f"✅ <b>Заявка #{order_id} выполнена успешно!</b>",
                         **reply_params
                     )
                 else:
@@ -194,6 +194,6 @@ async def handle_user_edit(callback: CallbackQuery, state: FSMContext):
     
     await callback.answer()
     await callback.message.reply(
-        f"🔄 <b>Режим редактирования заявки #{order_id} включен.</b>\n\n"
-        "Пожалуйста, отправьте новые фотографии и описание (одним сообщением или альбомом)."
+        f"⚠️ <b>ключен режим редактирования заявки #{order_id}.</b>\n\n"
+        "‼️ Пожалуйста, пересоздайте заявку с учетом дополнительной информации."
     )
