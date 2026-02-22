@@ -89,7 +89,7 @@ async def _send_order(bot: Bot, messages: list[Message], replace_id: int = None,
             async with session.post(url, data=form, headers=headers) as resp:
                 if resp.status == 201:
                     order = await resp.json()
-                    status_text = "успешно создана" if not replace_id else f"обновлена (номер #{replace_id} сохранен)"
+                    status_text = "успешно создана" if not replace_id else f"обновлена"
                     await status_msg.edit_text(
                         f"✅ <b>Заявка #{order['id']} {status_text}!</b>\n"
                         f"📋 Описание: {description or '<i>не указано</i>'}\n"
