@@ -6,7 +6,7 @@
 from aiogram import Router, F
 from aiogram.types import CallbackQuery
 
-from db.users import set_status, get_user, UserStatus
+from db.users import set_status, get_user, get_status, UserStatus
 
 router = Router()
 
