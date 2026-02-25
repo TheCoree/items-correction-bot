@@ -93,7 +93,7 @@ async def _send_order(bot: Bot, messages: list[Message], replace_id: int = None,
                     await status_msg.edit_text(
                         f"✅ <b>Заявка #{order['id']} {status_text}!</b>\n"
                         f"📋 Описание: {description or '<i>не указано</i>'}\n"
-                        f"⏳ Заявка в работе."
+                        f"⏳ Заявка в работе..."
                     )
                 else:
                     body = await resp.text()
@@ -194,6 +194,6 @@ async def handle_user_edit(callback: CallbackQuery, state: FSMContext):
     
     await callback.answer()
     await callback.message.reply(
-        f"⚠️ <b>ключен режим редактирования заявки #{order_id}.</b>\n\n"
+        f"⚠️ <b>ключен режим редактирования заявки #{order_id}.</b>\n"
         "‼️ Пожалуйста, пересоздайте заявку с учетом дополнительной информации."
     )
