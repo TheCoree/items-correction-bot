@@ -73,8 +73,14 @@ async def cmd_start(message: Message):
         "Пожалуйста, ожидайте."
     )
 
-    # ── Уведомление администратору с inline-кнопками ───────────────────
+    # ── Уведомление всем администраторам с inline-кнопками ──────────────
+    admin_targets = set()
     if ADMIN_CHAT_ID:
+        admin_targets.add(ADMIN_CHAT_ID)
+    from config import ADMIN_IDS
+    admin_targets.update(ADMIN_IDS)
+
+    if admin_targets:
         username_str = f"@{user.username}" if user.username else "<i>нет username</i>"
         keyboard = InlineKeyboardMarkup(inline_keyboard=[
             [
@@ -88,14 +94,22 @@ async def cmd_start(message: Message):
                 ),
             ]
         ])
-        await message.bot.send_message(
-            chat_id=ADMIN_CHAT_ID,
-            text=(
-                "🔔 <b>Новая заявка на верификацию</b>\n"
-                "━━━━━━━━━━━━━━━━━━━━━━\n"
-                f"👤 Имя: {hbold(user.full_name)}\n"
-                f"🆔 ID: {hcode(str(user.id))}\n"
-                f"📎 Username: {username_str}"
-            ),
-            reply_markup=keyboard,
+        
+        text = (
+            "🔔 <b>Новая заявка на верификацию</b>\n"
+            "━━━━━━━━━━━━━━━━━━━━━━\n"
+            f"👤 Имя: {hbold(user.full_name)}\n"
+            f"🆔 ID: {hcode(str(user.id))}\n"
+            f"📎 Username: {username_str}"
         )
+
+        for target_id in admin_targets:
+            try:
+                await message.bot.send_message(
+                    chat_id=target_id,
+                    text=text,
+                    reply_markup=keyboard,
+                )
+            except Exception as e:
+                # В логах можно зафиксировать, что одному из админов не ушло
+                pass

@@ -20,6 +20,18 @@ async def handle_verification(callback: CallbackQuery):
     _, action, user_id_str = callback.data.split(":")
     user_id = int(user_id_str)
 
+    # ПРОВЕРКА: Не была ли заявка уже обработана другим админом?
+    current_status = await get_status(user_id)
+    if current_status != UserStatus.PENDING:
+        await callback.answer("⚠️ Эта заявка уже обработана!", show_alert=True)
+        # Опционально: обновляем кнопки в сообщении, чтобы другие видели статус
+        status_text = "✅ Подтверждён" if current_status == UserStatus.APPROVED else "❌ Отклонён"
+        if status_text not in callback.message.html_text:
+            await callback.message.edit_text(
+                callback.message.html_text + f"\n\nℹ️ <b>Уже обработано:</b> {status_text}"
+            )
+        return
+
     user_data = await get_user(user_id)
     full_name = user_data.get("full_name", "Пользователь") if user_data else "Пользователь"
 
